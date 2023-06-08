@@ -13,6 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "express-group-router": "^2.1.0",
+    "express-group-routes": "^1.1.0",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.0.12",
     "nodemon": "^2.0.22",
     "validator": "^13.9.0"

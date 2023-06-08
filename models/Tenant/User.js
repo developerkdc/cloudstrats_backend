@@ -7,19 +7,19 @@ export const UserSchema = new mongoose.Schema({
     min: 2,
     max: 50,
   },
-//   email: {
-//     type: String,
-//     required: true,
-//     max: 50,
-//     unique: true,
-//     validate: [validator.isEmail, "Please Enter A Valid Email"],
-//   },
-//   password: {
-//     type: String,
-//     required: [true, "Enter Password"],
-//     min: 5,
-//     select: false,
-//   },
+  // email: {
+  //   type: String,
+  //   required: true,
+  //   max: 50,
+  //   unique: true,
+  //   validate: [validator.isEmail, "Please Enter A Valid Email"],
+  // },
+  // password: {
+  //   type: String,
+  //   required: [true, "Enter Password"],
+  //   min: 5,
+  //   select: false,
+  // },
   role: {
     type: String,
     enum: ["ID", "OD", "JP"],

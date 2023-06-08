@@ -1,6 +1,6 @@
 import connect from "./db-connection.js";
-import User, { UserSchema } from "./models/User.js";
-import Tenant, { TenantSchema } from "./models/Tenant.js";
+import { UserSchema } from "./models/User.js";
+import  { TenantSchema } from "./models/Tenant.js";
 const url =
   "mongodb+srv://admin:admin@aediocluster.ks70beh.mongodb.net/multitenantAdmin";
 let db;

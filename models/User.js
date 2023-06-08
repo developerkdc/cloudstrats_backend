@@ -30,10 +30,6 @@ export const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  companyId:{
-    type: String,
-    required:true
-  },
   createdDate: {
     type: Date,
     default: Date.now(),

@@ -1,9 +1,9 @@
-const express = require('express')
+import express from "express";
 const app = express()
 const port = 3000
 
-const { getTenantModel } = require("./admindb");
-const { getCustomerModel } = require("./tenantdb");
+import { getTenantModel,getUserModelAdmin } from "./admindb.js";
+import { getCustomerModel, getUserModelTenant } from "./tenantdb.js";
 
 app.get('/tenant', async (req, res) => {
     let tenantId = req.query.tenantId;
@@ -18,6 +18,39 @@ app.get('/tenant', async (req, res) => {
     }
 
     res.send(JSON.stringify(tenant))
+})
+app.get('/adminUser', async (req, res) => {
+    let userName = req.query.name;
+    let UserModel = await getUserModelAdmin();
+    const user = new UserModel({ name: userName });
+    let doc = await UserModel.findOneAndUpdate({ name: userName }, { name: userName });
+    if (!doc) {
+        user.save(function (err) {
+            // if (err) return handleError(err);
+            // saved!
+        });
+    }
+
+    res.send(JSON.stringify(user))
+})
+app.get('/tenantUser', async (req, res) => {
+    let tenantId = req.body.companyId;
+    let userName = req.query.name;
+    let tenantModel = await getTenantModel();
+    let tenant = await tenantModel.findOne({ id: tenantId })
+    if (!tenant)
+        res.sendStatus(404) // tenant not found. Register tenant
+    let UserModel = await getUserModelTenant(tenantId);
+    const user = new UserModel({ name: userName });
+    let doc = await UserModel.findOneAndUpdate({ name: userName }, { name: userName });
+    if (!doc) {
+        user.save(function (err) {
+            // if (err) return handleError(err);
+            // saved!
+        });
+    }
+
+    res.send(JSON.stringify(user))
 })
 
 app.get('/customer', async (req, res) => {

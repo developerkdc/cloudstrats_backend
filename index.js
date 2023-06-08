@@ -34,7 +34,7 @@ app.get('/adminUser', async (req, res) => {
     res.send(JSON.stringify(user))
 })
 app.get('/tenantUser', async (req, res) => {
-    let tenantId = req.body.companyId;
+    let tenantId = req.query.tenantId;
     let userName = req.query.name;
     let tenantModel = await getTenantModel();
     let tenant = await tenantModel.findOne({ id: tenantId })

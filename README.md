@@ -1,2 +1,2 @@
-# multi-tenant
-Multi Tenant Database Architecture.
+# multi-customer
+Multi Customer Database Architecture.

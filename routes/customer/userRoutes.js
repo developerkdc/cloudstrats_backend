@@ -1,9 +1,9 @@
 import express from "express";
-import { createUser } from "../../controllers/Tenant/user.js";
+import { createUser, getUser } from "../../controllers/Customer/user.js";
 
 const router = express.Router();
 
-router.get("/list");
+router.get("/list",getUser);
 router.post("/register",createUser);
 router.post("/login");
 router.post("/logout");

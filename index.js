@@ -1,13 +1,20 @@
 import express from "express";
-import { getTenantModel, getUserModelAdmin } from "./middlewares/admindb.js";
-import { getUserModelTenant } from "./middlewares/tenantdb.js";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import errorMiddleware from "./middlewares/error.js";
+import { getCustomerModel, getUserModelAdmin } from "./middlewares/admindb.js";
+import { getUserModelCustomer } from "./middlewares/customerdb.js";
 import adminUserRoutes from "./routes/admin/adminUserRoutes.js";
 import customerRoutes from "./routes/admin/customerRoutes.js";
-import userRoutes from "./routes/Tenant/userRoutes.js";
-import individualDossierRoutes from "./routes/Tenant/individualDossierRoutes.js";
-import organizationDossierRoutes from "./routes/Tenant/organizationDossierRoutes.js";
-import jailProformaRoutes from "./routes/Tenant/jailProformaRoutes.js";
+import userRoutes from "./routes/Customer/userRoutes.js";
+import individualDossierRoutes from "./routes/Customer/individualDossierRoutes.js";
+import organizationDossierRoutes from "./routes/Customer/organizationDossierRoutes.js";
+import jailProformaRoutes from "./routes/Customer/jailProformaRoutes.js";
 const app = express();
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(cookieParser());
+
 const port = 3000;
 
 app.use("/cloudstrat/user", adminUserRoutes); // login , register , delete , update , logout
@@ -18,23 +25,23 @@ app.use("/individual-dossier", individualDossierRoutes); // crud
 app.use("/organization-dossier", organizationDossierRoutes); // crud
 app.use("/jailproforma", jailProformaRoutes); // crud
 
-app.get("/tenant", async (req, res) => {
-  let tenantId = req.query.tenantId;
-  let tenantModel = await getTenantModel();
-  console.log(tenantModel);
-  const tenant = new tenantModel({ id: tenantId, name: tenantId });
-  let doc = await tenantModel.findOneAndUpdate(
-    { id: tenantId },
-    { id: tenantId, name: tenantId }
+app.get("/customer", async (req, res) => {
+  let customerId = req.query.customerId;
+  let customerModel = await getCustomerModel();
+  console.log(customerModel);
+  const customer = new customerModel({ id: customerId, name: customerId });
+  let doc = await customerModel.findOneAndUpdate(
+    { id: customerId },
+    { id: customerId, name: customerId }
   );
   if (!doc) {
-    tenant.save(function (err) {
+    customer.save(function (err) {
       // if (err) return handleError(err);
       // saved!
     });
   }
 
-  res.send(JSON.stringify(tenant));
+  res.send(JSON.stringify(customer));
 });
 
 app.get("/adminUser", async (req, res) => {
@@ -65,13 +72,13 @@ app.get("/adminUser", async (req, res) => {
   }
 });
 
-app.get("/tenantUser", async (req, res) => {
-  let tenantId = req.query.tenantId;
+app.get("/customerUser", async (req, res) => {
+  let customerId = req.query.customerId;
   let userName = req.query.name;
-  let tenantModel = await getTenantModel();
-  let tenant = await tenantModel.findOne({ id: tenantId });
-  if (!tenant) res.sendStatus(404); // tenant not found. Register tenant
-  let UserModel = await getUserModelTenant(tenantId);
+  let customerModel = await getCustomerModel();
+  let customer = await customerModel.findOne({ id: customerId });
+  if (!customer) res.sendStatus(404); // customer not found. Register customer
+  let UserModel = await getUserModelCustomer(customerId);
   const user = new UserModel({ name: userName });
   let doc = await UserModel.findOneAndUpdate(
     { name: userName },
@@ -88,13 +95,13 @@ app.get("/tenantUser", async (req, res) => {
 });
 
 // app.get('/customer', async (req, res) => {
-//     let tenantId = req.query.tenantId;
+//     let customerId = req.query.customerId;
 //     let customerName = req.query.customer;
-//     let tenantModel = await getTenantModel();
-//     let tenant = await tenantModel.findOne({ id: tenantId })
-//     if (!tenant)
-//         res.sendStatus(404) // tenant not found. Register tenant
-//     let customerModel = await getCustomerModel(tenantId);
+//     let customerModel = await getCustomerModel();
+//     let customer = await customerModel.findOne({ id: customerId })
+//     if (!customer)
+//         res.sendStatus(404) // customer not found. Register customer
+//     let customerModel = await getCustomerModel(customerId);
 //     const customer = new customerModel({ customerName });
 //     let doc = await customerModel.findOneAndUpdate({ customerName }, { customerName });
 //     if (!doc) {
@@ -108,15 +115,17 @@ app.get("/tenantUser", async (req, res) => {
 // })
 
 app.get("/userList", async (req, res) => {
-  let tenantId = req.query.tenantId;
-  let userModel = await getUserModelTenant(tenantId);
+  let customerId = req.query.customerId;
+  let userModel = await getUserModelCustomer(customerId);
   const data = await userModel.find();
   res.send(data);
 });
+
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`listening ${port}`);
 });
 
-//I am going to add/register two tenants.
-//Now I am goint to add customer for each tenant.
+//I am going to add/register two customers.
+//Now I am goint to add customer for each customer.
